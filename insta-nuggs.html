@@ -1,0 +1,148 @@
+<html><head><base href="https://www.insta-nuggs.com/"><title>Insta-Nuggs: Instant Chicken Nugget Delivery</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #FFF9E5;
+    color: #4A4A4A;
+  }
+  .header {
+    background-color: #FFD700;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .nugget-selector {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 30px;
+  }
+  .nugget-option {
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+  .nugget-option:hover {
+    transform: scale(1.05);
+  }
+  .nugget-img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  .order-button {
+    display: block;
+    width: 200px;
+    margin: 30px auto;
+    padding: 15px;
+    background-color: #FF6B6B;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .order-button:hover {
+    background-color: #FF4F4F;
+  }
+  #delivery-status {
+    text-align: center;
+    font-size: 24px;
+    margin-top: 20px;
+  }
+  .loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #FFD700;
+    border-radius: 50%;
+    border-top: 3px solid #FF6B6B;
+    animation: spin 1s linear infinite;
+    margin-left: 10px;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <h1>Insta-Nuggs</h1>
+    <p>Instant Chicken Nugget Delivery!</p>
+  </div>
+
+  <div class="container">
+    <h2>Choose Your Nuggets:</h2>
+    <div class="nugget-selector">
+      <div class="nugget-option" data-type="classic">
+        <img src="classic-nuggets.jpg" alt="Classic chicken nuggets, golden and crispy" class="nugget-img">
+        <p>Classic</p>
+      </div>
+      <div class="nugget-option" data-type="spicy">
+        <img src="spicy-nuggets.jpg" alt="Spicy chicken nuggets with a reddish coating" class="nugget-img">
+        <p>Spicy</p>
+      </div>
+      <div class="nugget-option" data-type="bbq">
+        <img src="bbq-nuggets.jpg" alt="BBQ glazed chicken nuggets, shiny and dark" class="nugget-img">
+        <p>BBQ</p>
+      </div>
+    </div>
+
+    <button class="order-button" id="orderButton">Order Now!</button>
+
+    <div id="delivery-status"></div>
+  </div>
+
+  <script>
+    let selectedNuggets = '';
+
+    document.querySelectorAll('.nugget-option').forEach(option => {
+      option.addEventListener('click', () => {
+        document.querySelectorAll('.nugget-option').forEach(opt => opt.style.opacity = '0.5');
+        option.style.opacity = '1';
+        selectedNuggets = option.getAttribute('data-type');
+      });
+    });
+
+    document.getElementById('orderButton').addEventListener('click', () => {
+      if (!selectedNuggets) {
+        alert('Please select a nugget type!');
+        return;
+      }
+
+      const statusDiv = document.getElementById('delivery-status');
+      statusDiv.innerHTML = 'Preparing your nuggets... <div class="loading"></div>';
+
+      setTimeout(() => {
+        statusDiv.innerHTML = 'Nuggets are on the way! <div class="loading"></div>';
+      }, 2000);
+
+      setTimeout(() => {
+        statusDiv.innerHTML = 'Your nuggets have arrived! Enjoy your ' + selectedNuggets + ' nuggets!';
+        
+        // Simulate nugget delivery notification
+        if ('Notification' in window) {
+          Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+              new Notification('Insta-Nuggs Delivery', {
+                body: 'Your ' + selectedNuggets + ' nuggets have arrived!',
+                icon: 'nugget-icon.png'
+              });
+            }
+          });
+        }
+      }, 5000);
+    });
+  </script>
+</body></html>
